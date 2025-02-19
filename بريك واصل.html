@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>العد التنازلي لبريك واصل علي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 30px;
+            font-weight: bold;
+            color: #333;
+        }
+        #countdown {
+            font-size: 50px;
+            font-weight: bold;
+            color: red;
+        }
+        #videoContainer {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>العد التنازلي لبريك واصل علي</h1>
+    <div id="countdown"></div>
+
+    <div id="videoContainer">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/J0cQVqb4tM4?autoplay=1" 
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        function startCountdown() {
+            var targetTime = new Date();
+            targetTime.setHours(22, 15, 0, 0); // تحديد الساعة 10:15 مساءً
+
+            function updateCountdown() {
+                var now = new Date();
+                var timeDifference = targetTime - now;
+
+                if (timeDifference <= 0) {
+                    document.getElementById("countdown").innerHTML = "انتهى الوقت!";
+                    clearInterval(interval);
+                    document.getElementById("videoContainer").style.display = "block"; // عرض الفيديو
+                    return;
+                }
+
+                var hours = Math.floor((timeDifference / (1000 * 60 * 60)) % 24);
+                var minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
+                var seconds = Math.floor((timeDifference / 1000) % 60);
+
+                document.getElementById("countdown").innerHTML = 
+                    hours.toString().padStart(2, '0') + ":" + 
+                    minutes.toString().padStart(2, '0') + ":" + 
+                    seconds.toString().padStart(2, '0');
+            }
+
+            updateCountdown(); // تحديث العد التنازلي فورًا
+            var interval = setInterval(updateCountdown, 1000); // تحديث كل ثانية
+        }
+
+        startCountdown();
+    </script>
+
+</body>
+</html>
