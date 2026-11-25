@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تحديات أبو سالم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lalezar&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: حماسي، ملعب ألعاب قوى، صوت مدرّب يشجّع
+   IDEA: مضمار جري — كل داعم حارة، وأبو سالم يحرّكهم بالنقاط
+   PICTURE: مضمار ترتان أحمر بحارات بيضاء هو الليدر بورد نفسه
+   COLOUR and TYPE: أحمر ترتان، أزرق ملعب عميق، أصفر خط النهاية؛ Lalezar للعناوين و IBM Plex Sans Arabic للنص
+   LAYOUT: عنوان + أرقام، المضمار عرض كامل، ثم النموذج، ثم قائمة التحديات */
+:root{color-scheme:light dark;
+--bg:light-dark(#f4f6fb,#0a1236);--ink:light-dark(#0d1533,#eef1fb);--mute:light-dark(#56607c,#a9b2d3);
+--card:light-dark(#fff,#121c4a);--line:light-dark(#dfe3ee,#26326a);
+--track:#c8442b;--track2:#b23a23;--blue:#13308f;--gold:#ffd23f;--ok:#1d9a5b}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans Arabic",system-ui,sans-serif;overflow-x:clip}
+h1,h2,.num,.lalezar{font-family:Lalezar,"IBM Plex Sans Arabic",sans-serif;font-weight:400}
+.wrap{max-width:1100px;margin:0 auto}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+.demo{background:var(--gold);color:#1a1400;text-align:center;padding:8px 12px;font-size:14px;font-weight:600}
+/* hero */
+.hero{background:var(--blue);color:#fff;padding-bottom:0}
+.top{display:flex;flex-wrap:wrap;gap:18px 40px;align-items:end;justify-content:space-between}
+h1{font-size:clamp(36px,6vw,58px);line-height:1.05;margin:0;text-wrap:balance}
+.sub{margin:8px 0 0;color:#c9d3ff;font-size:17px;max-width:46ch}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 16px;text-align:center;min-width:92px}
+.stat .num{font-size:34px;line-height:1;color:var(--gold)}
+.stat span{display:block;font-size:13px;color:#c9d3ff;margin-top:4px}
+/* track leaderboard */
+.trackbox{margin-top:28px;background:var(--track);border-radius:22px 22px 0 0;padding:18px clamp(10px,2.5vw,26px) 26px;position:relative;
+ background-image:repeating-linear-gradient(90deg,transparent 0 22px,rgba(0,0,0,.05) 22px 23px)}
+.trackhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.trackhead h2{margin:0;font-size:28px;color:#fff}
+.trackhead small{color:#ffe1d8;font-size:13px}
+.lane{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr) 78px;align-items:center;gap:12px;height:58px;
+ border-top:2px solid rgba(255,255,255,.85);padding-inline:6px}
+.lane:last-child{border-bottom:2px solid rgba(255,255,255,.85)}
+.lane .no{font-family:Lalezar;font-size:28px;color:#fff;text-align:center;line-height:1}
+.lane.r1 .no{color:var(--gold)}
+.run{position:relative;height:100%}
+.run::after{content:"";position:absolute;inset-inline-start:0;top:50%;width:100%;border-top:2px dashed rgba(255,255,255,.25)}
+.runner{position:absolute;top:50%;transform:translate(50%,-50%);inset-inline-start:0;display:flex;align-items:center;gap:8px;white-space:nowrap;
+ transition:inset-inline-start .9s cubic-bezier(.2,.8,.2,1);z-index:1}
+.dot{width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 3px 0 rgba(0,0,0,.2);flex:none}
+.dot svg{width:18px;height:18px;fill:var(--track2)}
+.r1 .dot{background:var(--gold)}
+.runner b{color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 0 rgba(0,0,0,.25);max-width:38vw;overflow:hidden;text-overflow:ellipsis}
+.pts{font-family:Lalezar;color:#fff;font-size:22px;white-space:nowrap}
+.pts small{font-family:"IBM Plex Sans Arabic";font-size:12px;opacity:.8}
+.run::before{content:"";position:absolute;inset-inline-end:0;top:0;bottom:0;width:8px;
+ background:repeating-linear-gradient(0deg,#fff 0 7px,#111 7px 14px);opacity:.9}
+.emptytrack{color:#ffe7df;text-align:center;padding:26px 10px;border-block:2px solid rgba(255,255,255,.8)}
+/* form */
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:28px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(18px,3vw,28px)}
+.panel h2{margin:0 0 6px;font-size:30px;line-height:1.1}
+.panel p{margin:0 0 16px;color:var(--mute)}
+label{display:block;font-weight:600;margin:14px 0 6px;font-size:15px}
+input,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px}
+textarea{min-height:96px;resize:vertical}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid var(--gold);outline-offset:1px;border-color:transparent}
+.hint{font-size:13px;color:var(--mute);margin-top:4px;display:flex;justify-content:space-between}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;min-height:44px;padding:10px 18px;font-weight:700}
+.primary{background:var(--track);color:#fff;width:100%;margin-top:18px;font-size:18px}
+.primary:disabled{opacity:.55;cursor:wait}
+.err{color:#d6332a;font-size:14px;margin-top:10px;min-height:1em}
+.mine{border:2px solid var(--track);border-radius:16px;padding:16px;margin-top:8px}
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.rules li{display:flex;gap:12px;align-items:flex-start}
+.rules i{font-style:normal;font-family:Lalezar;font-size:22px;background:var(--blue);color:#fff;border-radius:10px;width:38px;height:38px;display:grid;place-items:center;flex:none}
+/* list */
+.listhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px}
+.listhead h2{margin:0;font-size:36px;line-height:1.05}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}
+.tabs button[aria-pressed=true]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+.ch{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.ch .who{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:14px;color:var(--mute)}
+.ch .who b{color:var(--ink);font-size:16px}
+.ch .txt{font-size:18px;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.reward{display:flex;gap:8px;align-items:center;background:light-dark(#fff6d6,#2a2a12);border-radius:10px;padding:8px 10px;font-size:15px;overflow-wrap:anywhere}
+.reward svg{width:20px;height:20px;flex:none;fill:#c98f00}
+.badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:light-dark(#eef1fb,#1d2860);color:var(--mute);white-space:nowrap}
+.ch.done{border-color:var(--ok)}
+.ch.done .txt{text-decoration:line-through;text-decoration-color:var(--track);text-decoration-thickness:3px;color:var(--mute)}
+.ch.done .badge{background:var(--ok);color:#fff}
+.admin{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px dashed var(--line);padding-top:10px;margin-top:auto}
+.admin input{width:84px;padding:8px 10px;text-align:center}
+.admin .go{background:var(--ok);color:#fff}
+.admin .undo{background:var(--line);color:var(--ink)}
+.admin .del{background:transparent;color:#d6332a;border:1.5px solid currentColor;padding-inline:12px}
+.empty{color:var(--mute);text-align:center;padding:30px;border:2px dashed var(--line);border-radius:18px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:30px 16px 40px}
+footer button{background:none;color:var(--mute);text-decoration:underline;min-height:32px;padding:4px 8px;font-weight:400}
+/* celebration */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50;width:100%;height:100%}
+.party{position:fixed;inset:0;display:grid;place-items:center;z-index:49;background:rgba(10,18,54,.55);opacity:0;pointer-events:none;transition:opacity .3s}
+.party.on{opacity:1;pointer-events:auto}
+.party div{background:var(--gold);color:#1a1400;border-radius:24px;padding:28px 34px;text-align:center;max-width:min(92vw,460px);transform:scale(.8);transition:transform .4s cubic-bezier(.2,1.6,.4,1)}
+.party.on div{transform:scale(1)}
+.party h3{font-family:Lalezar;font-weight:400;font-size:44px;line-height:1.05;margin:0 0 8px}
+.party p{margin:0;font-size:17px;overflow-wrap:anywhere}
+.hband{padding-bottom:0}.mute{color:var(--mute)}
+.hgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.htile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+.htile .num{font-size:clamp(28px,4vw,40px);line-height:1;color:var(--track)}
+.htile span{display:block;color:var(--mute);font-size:14px;margin-top:6px}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:end;height:150px;margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 14px 8px}
+.wk{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;font-size:12px;color:var(--mute);white-space:nowrap}
+.wk i{display:block;width:min(100%,34px);background:var(--blue);border-radius:6px 6px 2px 2px;min-height:3px}
+.wk.today i{background:var(--track)}
+.wk b{font-weight:600;color:var(--ink)}
+.proof{font-weight:700;color:var(--blue);font-size:14px}
+.admin .ok{background:var(--blue);color:#fff}
+.admin .url{width:100%;flex:1 1 100%;text-align:start}
+.ch.pend{border-style:dashed}.ch.hid{opacity:.6}
+@media(max-width:760px){.hgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.lane{grid-template-columns:30px minmax(0,1fr) 64px;height:54px;gap:8px}.pts{font-size:19px}.stat{min-width:0;flex:1}}
+@media(prefers-reduced-motion:reduce){.runner,.party div{transition:none}}
+</style>
+</head>
+<body>
+<div id="demo" class="demo" hidden>وضع تجريبي: البيانات محفوظة في متصفحك فقط. أضف إعدادات Firebase عشان يشتغل للكل. أضف ‎#admin‎ للرابط لتجربة لوحة التحكم.</div>
+
+<header class="band hero">
+ <div class="wrap">
+  <div class="top">
+   <div>
+    <h1>رحلة أبو سالم الرياضية</h1>
+    <p class="sub">اكتب تحدي واحد وحط مكافأته. أنفّذ التحديات، واللي يخلص ينشطب قدّام الكل.</p>
+   </div>
+   <div class="stats">
+    <div class="stat" id="dayBox" hidden><div class="num" id="sDay">0</div><span>يوم الرحلة</span></div>
+    <div class="stat"><div class="num" id="sAll">0</div><span>تحدي</span></div>
+    <div class="stat"><div class="num" id="sDone">0</div><span>أنجزته</span></div>
+   </div>
+  </div>
+  <div class="trackbox">
+   <div class="trackhead"><h2>الليدر بورد</h2><small>الترتيب يحدده أبو سالم</small></div>
+   <div id="track"><div class="emptytrack">جاري التحميل…</div></div>
+  </div>
+ </div>
+</header>
+
+<section class="band hband" id="health" hidden>
+ <div class="wrap">
+  <div class="listhead"><h2>من ساعتي</h2><small id="hWhen" class="mute"></small></div>
+  <div class="hgrid">
+   <div class="htile"><div class="num" id="hSteps">0</div><span>خطوة</span></div>
+   <div class="htile"><div class="num" id="hEnergy">0</div><span>سعرة نشطة</span></div>
+   <div class="htile"><div class="num" id="hEx">0</div><span>دقيقة تمرين</span></div>
+   <div class="htile"><div class="num" id="hDist">0</div><span>كم مشي وجري</span></div>
+  </div>
+  <div class="week" id="week" aria-label="الخطوات آخر 7 أيام"></div>
+ </div>
+</section>
+
+<section class="band">
+ <div class="wrap grid2">
+  <div class="panel" id="formPanel">
+   <h2>حط تحديك</h2>
+   <p>تحدي واحد لكل شخص، اختاره صح. يظهر بالقائمة بعد ما يراجعه أبو سالم.</p>
+   <form id="f" novalidate>
+    <label for="fName">اسمك</label>
+    <input id="fName" maxlength="40" autocomplete="name" placeholder="مثال: فهد">
+    <label for="fText">التحدي</label>
+    <textarea id="fText" maxlength="280" placeholder="مثال: 100 ضغط في يوم واحد"></textarea>
+    <div class="hint"><span>وضّح العدد أو المدة</span><span id="cnt">0/280</span></div>
+    <label for="fReward">المكافأة</label>
+    <input id="fReward" maxlength="120" placeholder="مثال: عشاء على حسابي">
+    <button class="primary" id="send" type="submit">أرسل التحدي</button>
+    <div class="err" id="err" role="alert"></div>
+   </form>
+  </div>
+  <div class="panel">
+   <h2>كيف تمشي؟</h2>
+   <ul class="rules">
+    <li><i>1</i><div><b>تكتب تحدي واحد</b><br><span style="color:var(--mute)">مع اسمك والمكافأة اللي تبي تعطيها إذا أنجزته.</span></div></li>
+    <li><i>2</i><div><b>أراجع وأنفّذ</b><br><span style="color:var(--mute)">أختار التحديات اللي تمشي مع رحلتي، وأحياناً أنزّل مقطع إثبات.</span></div></li>
+    <li><i>3</i><div><b>ينشطب مع احتفالية</b><br><span style="color:var(--mute)">كل تحدي يخلص ينعلّم "تم" ويظهر لكل اللي فاتحين الصفحة.</span></div></li>
+    <li><i>4</i><div><b>الليدر بورد</b><br><span style="color:var(--mute)">أعطي نقاط للتحديات، والأعلى يتصدّر المضمار.</span></div></li>
+   </ul>
+  </div>
+ </div>
+</section>
+
+<section class="band" style="padding-top:0">
+ <div class="wrap">
+  <div class="listhead">
+   <h2>التحديات</h2>
+   <div class="tabs" id="tabs">
+    <button type="button" data-f="all" aria-pressed="true">الكل</button>
+    <button type="button" data-f="open" aria-pressed="false">باقي</button>
+    <button type="button" data-f="done" aria-pressed="false">أنجزته</button>
+    <button type="button" data-f="review" aria-pressed="false" hidden>مراجعة</button>
+    <button type="button" data-f="hidden" aria-pressed="false" hidden>مخفية</button>
+   </div>
+  </div>
+  <div class="cards" id="cards"></div>
+ </div>
+</section>
+
+<footer>
+ <div id="adminState"></div>
+ <button type="button" id="adminBtn">دخول أبو سالم</button>
+</footer>
+
+<canvas id="fx"></canvas>
+<div class="party" id="party" role="status"><div><h3>تم التحدي!</h3><p id="partyTxt"></p></div></div>
+
+<script type="module">
+{
+/* ======= الإعدادات: عبّها من Firebase (شف ملف الشرح) ======= */
+const FIREBASE_CONFIG = {apiKey:"AIzaSyCfVsFVg0aGG_TcUyYSrZHEF3AZUB4ymKM",authDomain:"abosalem-challenges.firebaseapp.com",projectId:"abosalem-challenges",storageBucket:"abosalem-challenges.firebasestorage.app",messagingSenderId:"169969349613",appId:"1:169969349613:web:eb986f7de977b904ed2de4"};
+const ADMIN_EMAIL = "7mo0od.099@gmail.com"; // إيميلك اللي تدخل فيه بقوقل
+const START_DATE = ""; // تاريخ بداية الرحلة مثل "2026-11-25" (اختياري)
+/* ============================================================ */
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ts = v => v ? (typeof v === "number" ? v : (v.toMillis ? v.toMillis() : 0)) : 0;
+const AR = "٠١٢٣٤٥٦٧٨٩";
+const norm = v => String(v ?? "").replace(/[٠-٩]/g, d => AR.indexOf(d)).replace(/٫/g, ".").replace(/[٬,\s]/g, "");
+const num = v => parseFloat(norm(v)) || 0;
+const fmt = (n, d = 0) => n.toLocaleString("en-US", {maximumFractionDigits: d});
+const isHttps = u => /^https:\/\/\S+$/.test(String(u || ""));
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
+const RUN = '<svg viewBox="0 0 24 24"><path d="M13.5 5.5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3A7.3 7.3 0 0 0 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6a2 2 0 0 0-1.7-1c-.3 0-.5 0-.8.1L6 8.3V13h2V9.6l1.8-.7"/></svg>';
+const GIFT = '<svg viewBox="0 0 24 24"><path d="M20 7h-2.2A3 3 0 0 0 12 3.4 3 3 0 0 0 6.2 7H4a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-5-2a1 1 0 1 1 0 2h-2a2 2 0 0 1 2-2zM9 5a2 2 0 0 1 2 2H9a1 1 0 1 1 0-2zm2 15H6v-8h5zm0-10H5V9h6zm8 10h-6v-8h5v8zm0-10h-6V9h6z"/></svg>';
+
+let items = [], filter = "all", store = null, first = true, prevDone = {};
+
+/* ---------- التخزين ---------- */
+async function firebaseStore() {
+ const V = "10.12.2", B = `https://www.gstatic.com/firebasejs/${V}/`;
+ const [{initializeApp}, A, F] = await Promise.all([import(B+"firebase-app.js"), import(B+"firebase-auth.js"), import(B+"firebase-firestore.js")]);
+ const app = initializeApp(FIREBASE_CONFIG), auth = A.getAuth(app), db = F.getFirestore(app);
+ const C = F.collection(db, "challenges"), rows = sn => sn.docs.map(d => ({id:d.id, ...d.data()}));
+ const s = { uid:null, isAdmin:false, onAuth:()=>{} };
+ let unsubs = [];
+ A.onAuthStateChanged(auth, u => {
+  if (!u) { A.signInAnonymously(auth).catch(e => showErr("تعذّر الاتصال: " + e.code)); return; }
+  s.uid = u.uid; s.isAdmin = !!u.email && u.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  s.onAuth();
+ });
+ // المدير يشوف كل شي، والزائر يشوف المنشور + تحديه هو بس
+ s.watch = (cb, onErr) => {
+  unsubs.forEach(u => u()); unsubs = [];
+  if (s.isAdmin) { unsubs.push(F.onSnapshot(C, sn => cb(rows(sn)), onErr)); return; }
+  let pub = [], mine = null;
+  const emit = () => cb(mine && !pub.some(x => x.id === mine.id) ? [...pub, mine] : pub);
+  unsubs.push(F.onSnapshot(F.query(C, F.where("status", "==", "approved")), sn => { pub = rows(sn); emit(); }, onErr));
+  if (s.uid) unsubs.push(F.onSnapshot(F.doc(db, "challenges", s.uid), d => { mine = d.exists() ? {id:d.id, ...d.data()} : null; emit(); }, () => {}));
+ };
+ s.health = cb => F.onSnapshot(F.collection(db, "health"), sn => cb(rows(sn)), () => {});
+ s.create = d => F.setDoc(F.doc(db, "challenges", s.uid), {...d, done:false, points:0, status:"pending", createdAt:F.serverTimestamp()});
+ s.update = (id, d) => F.updateDoc(F.doc(db, "challenges", id), "done" in d ? {...d, doneAt: d.done ? F.serverTimestamp() : null} : d);
+ s.remove = id => F.deleteDoc(F.doc(db, "challenges", id));
+ s.login = () => A.signInWithPopup(auth, new A.GoogleAuthProvider());
+ s.logout = () => A.signOut(auth);
+ return s;
+}
+function demoStore() {
+ const K = "abosalem-demo";
+ const read = () => { try { return JSON.parse(localStorage.getItem(K)) || []; } catch { return []; } };
+ const write = a => { try { localStorage.setItem(K, JSON.stringify(a)); } catch {} emit(); };
+ let uid; try { uid = localStorage.getItem(K+"-uid") || Math.random().toString(36).slice(2); localStorage.setItem(K+"-uid", uid); } catch { uid = "me"; }
+ let cb = null;
+ const emit = () => cb && cb(read());
+ const s = { uid, isAdmin: location.hash === "#admin", onAuth:()=>{} };
+ addEventListener("hashchange", () => { s.isAdmin = location.hash === "#admin"; s.onAuth(); });
+ s.watch = c => { cb = c; setTimeout(emit); };
+ s.health = c => { const out = []; for (let i = 0; i < 7; i++) { const d = new Date(Date.now() - i*864e5);
+   out.push({id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`,
+    steps:String(6000 + ((i*3797) % 7000)), energy:String(380 + ((i*137) % 300)), exercise:String(25 + ((i*17) % 40)), distance:String((4 + ((i*13) % 50)/10).toFixed(1)), updated:"23:30"}); }
+   setTimeout(() => c(out)); };
+ s.create = async d => { const a = read(); if (a.some(x => x.id === uid)) throw {code:"exists"}; a.push({id:uid, ...d, done:false, points:0, status:"pending", createdAt:Date.now()}); write(a); };
+ s.update = async (id, d) => write(read().map(x => x.id === id ? {...x, ...d, doneAt: "done" in d ? (d.done ? Date.now() : null) : x.doneAt} : x));
+ s.remove = async id => write(read().filter(x => x.id !== id));
+ s.login = async () => { location.hash = "admin"; };
+ s.logout = async () => { location.hash = ""; };
+ return s;
+}
+
+/* ---------- بيانات الساعة ---------- */
+function renderHealth(rows) {
+ const days = rows.map(r => ({...r, key: norm(r.id)})).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(r.key)).sort((a,b) => a.key < b.key ? 1 : -1);
+ if (!days.length) { $("health").hidden = true; return; }
+ $("health").hidden = false;
+ const t = days[0];
+ $("hSteps").textContent = fmt(num(t.steps)); $("hEnergy").textContent = fmt(num(t.energy));
+ $("hEx").textContent = fmt(num(t.exercise)); $("hDist").textContent = fmt(num(t.distance), 1);
+ $("hWhen").textContent = (t.key === today() ? "اليوم" : t.key) + (t.updated ? " · آخر تحديث " + norm(t.updated).replace(/(\d{1,2}:\d{2}).*/, "$1") : "");
+ const wk = days.slice(0, 7).reverse(), max = Math.max(...wk.map(d => num(d.steps)), 1);
+ $("week").innerHTML = wk.map(d => `<div class="wk ${d.key === today() ? "today" : ""}"><b>${esc(fmt(num(d.steps) / 1000, 1))}k</b>
+  <i style="height:${Math.round(num(d.steps) / max * 70)}%"></i><span>${esc(d.key.slice(8))}/${esc(String(+d.key.slice(5,7)))}</span></div>`).join("");
+}
+
+/* ---------- العرض ---------- */
+function render() {
+ const adm = !!store?.isAdmin;
+ const pub = items.filter(x => x.status === "approved");
+ const done = pub.filter(x => x.done);
+ $("sAll").textContent = pub.length; $("sDone").textContent = done.length;
+ if (START_DATE) { const d = Math.floor((Date.now() - new Date(START_DATE + "T00:00:00")) / 864e5) + 1; if (d > 0) { $("dayBox").hidden = false; $("sDay").textContent = d; } }
+
+ const ranked = pub.filter(x => (+x.points || 0) > 0).sort((a,b) => b.points - a.points || ts(a.createdAt) - ts(b.createdAt)).slice(0, 8);
+ const max = ranked[0]?.points || 1;
+ $("track").innerHTML = ranked.length ? ranked.map((x,i) => `
+  <div class="lane ${i===0?"r1":""}"><div class="no">${i+1}</div>
+   <div class="run"><div class="runner" style="inset-inline-start:${Math.max(4, Math.round((x.points/max)*72))}%">
+    <span class="dot">${RUN}</span><b>${esc(x.name)}</b></div></div>
+   <div class="pts">${esc(x.points)} <small>نقطة</small></div></div>`).join("")
+  : `<div class="emptytrack">المضمار فاضي. أول ما أعطي نقاط للتحديات يبدأ السباق.</div>`;
+
+ const mine = store && !adm && items.find(x => x.id === store.uid);
+ if (mine) {
+  const live = mine.status === "approved";
+  $("formPanel").innerHTML = `<h2>تحديك وصل</h2><p>شكراً على الدعم يا ${esc(mine.name)}.</p>
+   <div class="mine"><div class="txt" style="font-weight:700;font-size:18px;${live && mine.done ? "text-decoration:line-through;text-decoration-color:var(--track);text-decoration-thickness:3px" : ""}">${esc(mine.text)}</div>
+   <div class="reward" style="margin-top:10px">${GIFT}<span>${esc(mine.reward)}</span></div>
+   <p style="margin:12px 0 0;font-weight:700;color:${live && mine.done ? "var(--ok)" : "var(--mute)"}">${!live ? "وصل لأبو سالم" : mine.done ? "تم إنجازه!" : "منشور، بانتظار التنفيذ"}${live && mine.points ? " · " + esc(mine.points) + " نقطة" : ""}</p></div>`;
+ }
+
+ const counts = {review: items.filter(x => x.status === "pending").length, hidden: items.filter(x => x.status === "hidden").length};
+ for (const b of $("tabs").children) {
+  const f = b.dataset.f;
+  if (f === "review" || f === "hidden") { b.hidden = !adm; b.textContent = (f === "review" ? "مراجعة" : "مخفية") + (counts[f] ? ` (${counts[f]})` : ""); }
+ }
+ if (!adm && (filter === "review" || filter === "hidden")) setFilter("all");
+
+ const pool = filter === "review" ? items.filter(x => x.status === "pending") : filter === "hidden" ? items.filter(x => x.status === "hidden")
+  : pub.filter(x => filter === "all" || (filter === "done" ? x.done : !x.done));
+ const list = pool.sort((a,b) => (a.done - b.done) || (a.done ? ts(b.doneAt) - ts(a.doneAt) : ts(b.createdAt) - ts(a.createdAt)));
+ $("cards").innerHTML = list.length ? list.map(x => {
+  const st = x.status, cls = st === "pending" ? "pend" : st === "hidden" ? "hid" : x.done ? "done" : "";
+  const badge = st === "pending" ? "جديد" : st === "hidden" ? "مخفي" : (x.done ? "أنجزته" : "باقي") + (x.points ? " · " + esc(x.points) + " ن" : "");
+  let tools = "";
+  if (adm) tools = `<div class="admin">` + (st === "pending" ? `
+     <button type="button" class="ok" data-act="approve">نشر</button>
+     <button type="button" class="undo" data-act="hide">إخفاء</button>`
+   : st === "hidden" ? `
+     <button type="button" class="ok" data-act="approve">نشر</button>
+     <button type="button" class="del" data-act="del">حذف نهائي</button>`
+   : `<input type="number" inputmode="numeric" min="0" max="9999" value="${esc(x.points || 0)}" aria-label="نقاط ${esc(x.name)}" data-act="pts">
+     <button type="button" class="${x.done ? "undo" : "go"}" data-act="toggle">${x.done ? "تراجع" : "أنجزته"}</button>
+     <button type="button" class="undo" data-act="hide">إخفاء</button>
+     <input class="url" type="url" inputmode="url" placeholder="رابط مقطع الإثبات (اختياري)" value="${esc(x.proof || "")}" aria-label="رابط الإثبات" data-act="proof">`) + `</div>`;
+  return `<article class="ch ${cls}" data-id="${esc(x.id)}">
+   <div class="who"><b>${esc(x.name)}</b><span class="badge">${badge}</span></div>
+   <div class="txt">${esc(x.text)}</div>
+   <div class="reward">${GIFT}<span>${esc(x.reward)}</span></div>
+   ${isHttps(x.proof) ? `<a class="proof" href="${esc(x.proof)}" target="_blank" rel="noopener">شوف الإثبات</a>` : ""}
+   ${tools}</article>`;
+ }).join("")
+  : `<div class="empty">${filter === "review" ? "ما فيه تحديات جديدة تنتظر المراجعة." : filter === "hidden" ? "ما فيه تحديات مخفية." : pub.length ? "ما فيه تحديات هنا." : "ما فيه تحديات للحين. كن أول واحد يتحداني!"}</div>`;
+
+ $("adminState").textContent = adm ? `أنت داخل كمدير.${counts.review ? ` عندك ${counts.review} تحدي ينتظر المراجعة.` : ""} المخفي ما يشوفه أحد غيرك.` : "";
+ $("adminBtn").textContent = adm ? "خروج" : "دخول أبو سالم";
+}
+
+/* ---------- الاحتفالية ---------- */
+function celebrate(x) {
+ $("partyTxt").textContent = `تحدي ${x.name || ""}: ${x.text || ""}`;
+ $("party").classList.add("on");
+ setTimeout(() => $("party").classList.remove("on"), 3200);
+ if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+ const c = $("fx"), g = c.getContext("2d"), W = c.width = innerWidth, H = c.height = innerHeight;
+ const cols = ["#ffd23f","#c8442b","#13308f","#1d9a5b","#ffffff"];
+ const P = Array.from({length:160}, () => ({x:W/2, y:H*.55, vx:(Math.random()-.5)*16, vy:-Math.random()*16-6, s:Math.random()*8+4, r:Math.random()*6, c:cols[Math.random()*5|0]}));
+ const t0 = performance.now();
+ const step = t => {
+  g.clearRect(0,0,W,H);
+  for (const p of P) { p.vy += .42; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += .15;
+   g.save(); g.translate(p.x,p.y); g.rotate(p.r); g.fillStyle = p.c; g.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); g.restore(); }
+  if (t - t0 < 3000) requestAnimationFrame(step); else g.clearRect(0,0,W,H);
+ };
+ requestAnimationFrame(step);
+}
+$("party").addEventListener("click", () => $("party").classList.remove("on"));
+
+/* ---------- الأحداث ---------- */
+function showErr(m) { const e = $("err"); if (e) e.textContent = m; }
+function setFilter(f) { filter = f; for (const t of $("tabs").children) t.setAttribute("aria-pressed", t.dataset.f === f); }
+$("fText").addEventListener("input", e => $("cnt").textContent = e.target.value.length + "/280");
+$("f").addEventListener("submit", async e => {
+ e.preventDefault();
+ const name = $("fName").value.trim(), text = $("fText").value.trim(), reward = $("fReward").value.trim();
+ if (!name) return showErr("اكتب اسمك.");
+ if (text.length < 3) return showErr("اكتب التحدي بشكل واضح.");
+ if (!reward) return showErr("حط المكافأة.");
+ if (!store?.uid) return showErr("لحظة، جاري الاتصال… جرّب بعد ثواني.");
+ $("send").disabled = true; showErr("");
+ try { await store.create({name, text, reward}); }
+ catch (er) { showErr(er?.code === "permission-denied" || er?.code === "exists" ? "عندك تحدي من قبل، كل شخص له تحدي واحد." : "ما انرسل، جرّب مرة ثانية."); }
+ finally { const b = $("send"); if (b) b.disabled = false; }
+});
+$("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; setFilter(b.dataset.f); render(); });
+$("cards").addEventListener("click", async e => {
+ const b = e.target.closest("button[data-act]"); if (!b || !store?.isAdmin) return;
+ const id = b.closest(".ch").dataset.id, x = items.find(i => i.id === id); if (!x) return;
+ const act = b.dataset.act;
+ if (act === "del" && !b.dataset.sure) { b.dataset.sure = 1; b.textContent = "متأكد؟"; return; }
+ b.disabled = true;
+ try {
+  if (act === "toggle") await store.update(id, {done: !x.done});
+  if (act === "approve") await store.update(id, {status: "approved"});
+  if (act === "hide") await store.update(id, {status: "hidden"});
+  if (act === "del") await store.remove(id);
+ } catch { b.textContent = "صار خطأ"; }
+});
+$("cards").addEventListener("change", async e => {
+ const el = e.target, act = el.dataset.act; if (!store?.isAdmin || (act !== "pts" && act !== "proof")) return;
+ const id = el.closest(".ch").dataset.id;
+ let val;
+ if (act === "pts") val = {points: Math.max(0, Math.min(9999, parseInt(norm(el.value), 10) || 0))};
+ else { const v = el.value.trim(); if (v && !isHttps(v)) { el.style.borderColor = "#d6332a"; return; } val = {proof: v}; }
+ try { await store.update(id, val); el.style.borderColor = ""; } catch { el.style.borderColor = "#d6332a"; }
+});
+$("adminBtn").addEventListener("click", async () => {
+ if (!store) return;
+ try { store.isAdmin ? await store.logout() : await store.login(); }
+ catch (er) { $("adminState").textContent = "ما تم الدخول: " + (er?.code || ""); }
+});
+
+/* ---------- التشغيل ---------- */
+(async () => {
+ try { store = FIREBASE_CONFIG ? await firebaseStore() : demoStore(); }
+ catch { $("track").innerHTML = `<div class="emptytrack">تعذّر تحميل الصفحة، حدّث الصفحة.</div>`; return; }
+ if (!FIREBASE_CONFIG) $("demo").hidden = false;
+ let slow = null;
+ const onList = list => {
+  clearTimeout(slow);
+  if (!first) for (const x of list) if (x.done && x.status === "approved" && prevDone[x.id] === false) celebrate(x);
+  prevDone = Object.fromEntries(list.map(x => [x.id, !!x.done && x.status === "approved"]));
+  items = list; first = false; render();
+ };
+ const onErr = () => { clearTimeout(slow); $("track").innerHTML = `<div class="emptytrack">تعذّر تحميل التحديات. تأكد من إعدادات Firebase.</div>`; };
+ store.onAuth = () => {
+  first = true; prevDone = {}; clearTimeout(slow);
+  slow = setTimeout(() => { if (first) $("track").innerHTML = `<div class="emptytrack">الاتصال بطيء… لحظات.</div>`; }, 10000);
+  store.watch(onList, onErr); render();
+ };
+ store.health(renderHealth);
+ if (!FIREBASE_CONFIG || store.uid) store.onAuth();
+})();
+}
+</script>
+</body>
+</html>
