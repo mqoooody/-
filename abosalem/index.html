@@ -17,6 +17,7 @@
 --card:light-dark(#fff,#121c4a);--line:light-dark(#dfe3ee,#26326a);
 --track:#c8442b;--track2:#b23a23;--blue:#13308f;--gold:#ffd23f;--ok:#1d9a5b}
 *{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans Arabic",system-ui,sans-serif;overflow-x:clip}
 h1,h2,.num,.lalezar{font-family:Lalezar,"IBM Plex Sans Arabic",sans-serif;font-weight:400}
 .wrap{max-width:1100px;margin:0 auto}
@@ -106,7 +107,11 @@ footer button{background:none;color:var(--mute);text-decoration:underline;min-he
 .party.on div{transform:scale(1)}
 .party h3{font-family:Lalezar;font-weight:400;font-size:44px;line-height:1.05;margin:0 0 8px}
 .party p{margin:0;font-size:17px;overflow-wrap:anywhere}
-.hband{padding-bottom:0}.mute{color:var(--mute)}
+.hband{padding-bottom:0}
+.hform{margin-top:16px}.hform h2{font-size:26px}
+.hinputs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.hinputs label{margin:0;font-size:14px}.hinputs input{margin-top:6px}
+@media(max-width:760px){.hinputs{grid-template-columns:repeat(2,minmax(0,1fr))}}.mute{color:var(--mute)}
 .hgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .htile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;text-align:center}
 .htile .num{font-size:clamp(28px,4vw,40px);line-height:1;color:var(--track)}
@@ -159,6 +164,19 @@ footer button{background:none;color:var(--mute);text-decoration:underline;min-he
    <div class="htile"><div class="num" id="hDist">0</div><span>كم مشي وجري</span></div>
   </div>
   <div class="week" id="week" aria-label="الخطوات آخر 7 أيام"></div>
+  <form class="panel hform" id="hForm" hidden novalidate>
+   <h2>حدّث أرقام اليوم</h2>
+   <p>انسخها من تطبيق اللياقة في جوالك. تقدر تحدّثها أكثر من مرة باليوم.</p>
+   <div class="hinputs">
+    <label>التاريخ<input id="iDay" type="date"></label>
+    <label>الخطوات<input id="iSteps" inputmode="numeric" placeholder="8500"></label>
+    <label>السعرات النشطة<input id="iEnergy" inputmode="numeric" placeholder="450"></label>
+    <label>دقائق التمرين<input id="iEx" inputmode="numeric" placeholder="35"></label>
+    <label>المسافة (كم)<input id="iDist" inputmode="decimal" placeholder="6.2"></label>
+   </div>
+   <button class="primary" id="hSave" type="submit">حفظ</button>
+   <div class="err" id="hErr" role="status"></div>
+  </form>
  </div>
 </section>
 
@@ -260,6 +278,7 @@ async function firebaseStore() {
   if (s.uid) unsubs.push(F.onSnapshot(F.doc(db, "challenges", s.uid), d => { mine = d.exists() ? {id:d.id, ...d.data()} : null; emit(); }, () => {}));
  };
  s.health = cb => F.onSnapshot(F.collection(db, "health"), sn => cb(rows(sn)), () => {});
+ s.saveHealth = (id, d) => F.setDoc(F.doc(db, "health", id), d);
  s.create = d => F.setDoc(F.doc(db, "challenges", s.uid), {...d, done:false, points:0, status:"pending", createdAt:F.serverTimestamp()});
  s.update = (id, d) => F.updateDoc(F.doc(db, "challenges", id), "done" in d ? {...d, doneAt: d.done ? F.serverTimestamp() : null} : d);
  s.remove = id => F.deleteDoc(F.doc(db, "challenges", id));
@@ -281,6 +300,7 @@ function demoStore() {
    out.push({id:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`,
     steps:String(6000 + ((i*3797) % 7000)), energy:String(380 + ((i*137) % 300)), exercise:String(25 + ((i*17) % 40)), distance:String((4 + ((i*13) % 50)/10).toFixed(1)), updated:"23:30"}); }
    setTimeout(() => c(out)); };
+ s.saveHealth = async () => {};
  s.create = async d => { const a = read(); if (a.some(x => x.id === uid)) throw {code:"exists"}; a.push({id:uid, ...d, done:false, points:0, status:"pending", createdAt:Date.now()}); write(a); };
  s.update = async (id, d) => write(read().map(x => x.id === id ? {...x, ...d, doneAt: "done" in d ? (d.done ? Date.now() : null) : x.doneAt} : x));
  s.remove = async id => write(read().filter(x => x.id !== id));
@@ -290,10 +310,16 @@ function demoStore() {
 }
 
 /* ---------- بيانات الساعة ---------- */
+let healthRows = [];
 function renderHealth(rows) {
+ healthRows = rows;
+ const adm = !!store?.isAdmin;
+ $("hForm").hidden = !adm;
+ if (adm && !$("iDay").value) $("iDay").value = today();
  const days = rows.map(r => ({...r, key: norm(r.id)})).filter(r => /^\d{4}-\d{2}-\d{2}$/.test(r.key)).sort((a,b) => a.key < b.key ? 1 : -1);
- if (!days.length) { $("health").hidden = true; return; }
- $("health").hidden = false;
+ $("health").hidden = !days.length && !adm;
+ document.querySelector(".hgrid").hidden = !days.length; $("week").hidden = !days.length;
+ if (!days.length) return;
  const t = days[0];
  $("hSteps").textContent = fmt(num(t.steps)); $("hEnergy").textContent = fmt(num(t.energy));
  $("hEx").textContent = fmt(num(t.exercise)); $("hDist").textContent = fmt(num(t.distance), 1);
@@ -364,6 +390,7 @@ function render() {
 
  $("adminState").textContent = adm ? `أنت داخل كمدير.${counts.review ? ` عندك ${counts.review} تحدي ينتظر المراجعة.` : ""} المخفي ما يشوفه أحد غيرك.` : "";
  $("adminBtn").textContent = adm ? "خروج" : "دخول أبو سالم";
+ renderHealth(healthRows);
 }
 
 /* ---------- الاحتفالية ---------- */
@@ -401,6 +428,20 @@ $("f").addEventListener("submit", async e => {
  try { await store.create({name, text, reward}); }
  catch (er) { showErr(er?.code === "permission-denied" || er?.code === "exists" ? "عندك تحدي من قبل، كل شخص له تحدي واحد." : "ما انرسل، جرّب مرة ثانية."); }
  finally { const b = $("send"); if (b) b.disabled = false; }
+});
+$("hForm").addEventListener("submit", async e => {
+ e.preventDefault(); if (!store?.isAdmin) return;
+ const id = $("iDay").value, v = k => norm($(k).value);
+ if (!/^\d{4}-\d{2}-\d{2}$/.test(id)) { $("hErr").textContent = "اختر التاريخ."; return; }
+ const d = {steps:v("iSteps"), energy:v("iEnergy"), exercise:v("iEx"), distance:v("iDist")};
+ if (!Object.values(d).some(x => x)) { $("hErr").textContent = "اكتب رقم واحد على الأقل."; return; }
+ const old = healthRows.find(r => norm(r.id) === id) || {};
+ for (const k in d) if (!d[k]) d[k] = String(old[k] ?? "0");
+ const t = new Date(); d.updated = `${String(t.getHours()).padStart(2,"0")}:${String(t.getMinutes()).padStart(2,"0")}`;
+ $("hSave").disabled = true; $("hErr").textContent = "";
+ try { await store.saveHealth(id, d); $("hErr").textContent = "انحفظ."; for (const k of ["iSteps","iEnergy","iEx","iDist"]) $(k).value = ""; }
+ catch { $("hErr").textContent = "ما انحفظ، تأكد إنك داخل بحسابك."; }
+ finally { $("hSave").disabled = false; }
 });
 $("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; setFilter(b.dataset.f); render(); });
 $("cards").addEventListener("click", async e => {
